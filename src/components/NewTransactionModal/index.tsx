@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 import Modal from 'react-modal';
 import closeImg from '../../assets/close.svg'
 import incomeImg from '../../assets/income.svg'
@@ -11,8 +11,22 @@ interface NewTransactionModalProps{
 }
 
 export function NewTransactionModal({isOpen, onRequestClose}:NewTransactionModalProps){
- 
-  const [type,setType]=useState('deposit')
+  const [title,setTitle] =useState('');
+  const [value,setValue] =useState(0);
+  const [category,setCategory] =useState('');
+  const [type,setType]=useState('deposit');
+
+  function handleCreateNewTransaction(event:FormEvent){ 
+    //funções começando com handle lembra que indica que é executada por uma ação do usuário
+    event.preventDefault(); 
+    //previne o fechamento do modal com o submit do form
+    console.log({
+      title,
+      value,
+      category,
+      type
+    })
+  }
 
   return(
      <Modal 
@@ -28,10 +42,26 @@ export function NewTransactionModal({isOpen, onRequestClose}:NewTransactionModal
       >
         <img src={closeImg} alt="Fechar Modal" />
       </button>
-      <Container>
+      <Container onSubmit={handleCreateNewTransaction}>
         <h2>Cadastrar Transação</h2>
-        <input placeholder="Título" />
-        <input type="number" placeholder="Valor"/>
+
+        <input
+         placeholder="Título" 
+         value={title}
+         onChange={event => setTitle(event.target.value)} 
+         //faz com que consiga-se capturar o valor digitado no input e logo em seguida salva o novo estado
+        />
+
+        <input
+         type="number" 
+         placeholder="Valor"
+         value={value}
+         onChange={event => setValue(Number(event.target.value))} 
+         //o event retorna sempre uma string por isso a conversão... 
+         // também poderia ser feita assim =>
+         //{event => setValue(+event.target.value)} 
+         />
+
         <TransactionTypeContainer>
 
           <RadioBox
@@ -51,11 +81,17 @@ export function NewTransactionModal({isOpen, onRequestClose}:NewTransactionModal
           activeColor="red"
           >
             <img src={outcomeImg} alt="Saída" />
-            <span>Entrada</span>
+            <span>Saída</span>
           </RadioBox>
 
         </TransactionTypeContainer>
-        <input placeholder="Categoria"/>
+
+        <input 
+        placeholder="Categoria"
+        value={category}
+        onChange={event => setCategory(event.target.value)} 
+        />
+
         <button type="submit">Cadastrar</button>
 
 
