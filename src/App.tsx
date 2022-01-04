@@ -3,7 +3,7 @@ import Modal from 'react-modal';
 import { Header } from "./components/Header";
 import { Dashboard } from "./components/Dashboard";
 import { NewTransactionModal } from './components/NewTransactionModal';
-import { TransactionsContext } from './TransactionsContext';
+import { TransactionsProvider } from './TransactionsContext';
 
 import { GlobalStyle } from "./styles/global";
 
@@ -12,7 +12,7 @@ Modal.setAppElement('#root');
 export function App() {
 
   const [isNewTransactionModalOpen, setIsNewTransactionModalOpen] = useState(false);
-
+ 
   function handleOpenNewTransactionModal(){
     setIsNewTransactionModalOpen(true);
   }
@@ -24,7 +24,7 @@ export function App() {
   return (
     // substituiu o <> fragment já que ele precisa ficar por volta de tudo
     //se quisesse que o contexto fosse acessado por components específicos so colocaria ele por volta dos mesmos
-    <TransactionsContext.Provider value={[]}>
+    <TransactionsProvider>
     <Header onOpenNewTransactionModal={handleOpenNewTransactionModal}/>
     <Dashboard/>
     <NewTransactionModal
@@ -32,7 +32,7 @@ export function App() {
       onRequestClose={handleCloseNewTransactionModal}
     />
     <GlobalStyle/>
-    </TransactionsContext.Provider>
+    </TransactionsProvider>
   );
 }
 

@@ -1,5 +1,4 @@
-import { useContext, useEffect, useState } from "react";
-import { api } from "../../services/api";
+import { useContext } from "react";
 import { TransactionsContext } from "../../TransactionsContext";
 import { Container } from "./styles";
 
@@ -13,15 +12,7 @@ interface Transaction {
 }
 
 export function TransactionsTable(){
-  const data =useContext(TransactionsContext);
-  const[transactions,setTransactions] =useState<Transaction[]>([]);
-
-  useEffect(() => {
-    // barra '/' antes de transactions é opcional
-    api.get('transactions')
-    .then(response => setTransactions(response.data.transactions))//informações vindo de um objeto data onde tem uma array transactions
-  },[]);
-
+  const transactions=useContext(TransactionsContext);
   return(
     <Container>
       <table>
