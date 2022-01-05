@@ -1,5 +1,5 @@
-import { createContext, useEffect, useState ,ReactNode} from "react";
-import { api } from "./services/api";
+import { createContext, useEffect, useState ,ReactNode, useContext} from "react";
+import { api } from "../services/api";
 
 interface Transaction {
   id:string;
@@ -22,7 +22,7 @@ interface TransactionsContextData{
   createTransaction:(transaction:TransactionInput) => Promise<void>;
 }
 
-export const TransactionsContext = createContext<TransactionsContextData>(
+ const TransactionsContext = createContext<TransactionsContextData>(
   {} as TransactionsContextData //(enganando o typescript) esse objeto tem o tipo que eu quero mesmo deixa de reclamar kk
   );
 
@@ -52,4 +52,11 @@ export function TransactionsProvider({children}:TransactionsProviderProps){
       {children}
     </TransactionsContext.Provider>
   )
+}
+
+export function useTransactions(){
+  // hooks normalmente se coloca o nome começando com use...
+  const context = useContext(TransactionsContext);
+
+  return context;
 }
