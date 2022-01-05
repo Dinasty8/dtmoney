@@ -10,10 +10,21 @@ interface Transaction {
   createdAt:string;
 }
 
+type TransactionInput = Omit<Transaction,'id' | 'createdAt'>;
+// poderia ser type TransactionInput = Pick<Transaction,'title' | 'amount' | 'type' | 'category'>;
+
 interface TransactionsProviderProps{
   children:ReactNode;
 }
-export const TransactionsContext = createContext<Transaction[]>([]);
+
+interface TransactionsContextData{
+  transactions:Transaction[];
+  createTransaction:(transaction:TransactionInput) => void;
+}
+
+export const TransactionsContext = createContext<TransactionsContextData>(
+  {} as TransactionsContextData //(enganando o typescript) esse objeto tem o tipo que eu quero mesmo deixa de reclamar kk
+  );
 
 export function TransactionsProvider({children}:TransactionsProviderProps){
   const[transactions,setTransactions] =useState<Transaction[]>([]);
@@ -23,8 +34,12 @@ export function TransactionsProvider({children}:TransactionsProviderProps){
     .then(response => setTransactions(response.data.transactions))//informações vindo de um objeto data onde tem uma array transactions
   },[]);
 
+  function createTransaction(transaction:TransactionInput){
+    api.post('/transactions',transaction)
+  }
+
   return(
-    <TransactionsContext.Provider value={transactions}>
+    <TransactionsContext.Provider value={{transactions,createTransaction}}> 
       {children}
     </TransactionsContext.Provider>
   )
